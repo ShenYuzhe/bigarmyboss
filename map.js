@@ -1,8 +1,5 @@
 var plotly = require('plotly')('ys2821', '044pCY7FHgpXLaAV871y')
 
-var a = 20;
-var b = 10;
-
 /*
     Following is simple Math Utils
 */
