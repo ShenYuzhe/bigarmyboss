@@ -1,4 +1,4 @@
-var plotly = require('plotly')('ys2821', '044pCY7FHgpXLaAV871y')
+var plotly = require('plotly')('', '')
 
 /*
     Following is simple Math Utils
