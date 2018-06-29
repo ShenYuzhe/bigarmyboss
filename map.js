@@ -1,5 +1,3 @@
-var plotly = require('plotly')('', '')
-
 /*
     Following is simple Math Utils
 */
@@ -85,6 +83,9 @@ function createCityByEthic(ethicName) {
 }
 
 /* Following is simple demo methods*/
+var credential = require('./credential.json');
+var plotly = require('plotly')(credential.name, credential.token)
+
 var han = {x: [], y: []};
 var mongolia = {x: [], y: []};
 for (var i = 0; i < 1000; i++) {
@@ -111,7 +112,7 @@ var trace2 = {
 }
 
 var data = [trace1, trace2];
-var graphOptions = {filename: 'two_countries', fileopt: 'overwrite'};
+var graphOptions = {filename: 'two_countries_cred', fileopt: 'overwrite'};
 plotly.plot(data, graphOptions, function(err, msg) {
     console.log(msg);
 });
