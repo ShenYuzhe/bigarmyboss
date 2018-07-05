@@ -14,12 +14,9 @@ function Soldier() {
         name: '',
         loc: Point(0, 0),
         staus: battleStatus.NORMAL,
-        type: undefined,
         focus: undefined,
-        action: function(context) { return this.type.action(this, context)},
-        onAttack: function(enemy) { return this.type.onAttack(this, enemy)},
-        // instant instruction in battle
-        direct: function(instruction) {}
+        action: undefined,
+        onAttack: undefined,
     }
 }
 
@@ -36,7 +33,9 @@ SoldierBuilder = function() {
         },
 // TODO(yuzheshen): rewrite set type to move each field into soldier
         withType: function(type) {
-            this.solider.type = type;
+            for (k in type) {
+                this.solider[k] = type[k];
+            }
             return this;
         },
         build: function() {
@@ -72,40 +71,40 @@ var ACTS = {
     }
 }
 
-function footSoldierAct(me, context) {
-    if (me.focus != undefined &&
-        distance(me.focus.loc, me.loc) < me.arm) {
-        return ATTACK(me.focus);
+function footSoldierAct(context) {
+    if (this.focus != undefined &&
+        distance(this.focus.loc, this.loc) < this.arm) {
+        return ACTS.ATTACK(this.focus);
     }
     var shortest = Number.MAX_SAFE_INTEGER;
     for(var i = 0; i < context.length; i++) {
         var enemy = context[i];
         if (enemy == undefined ||
-            enemy.id == me.id ||
+            enemy.id == this.id ||
             enemy.status == battleStatus.FIGHT) {
             continue;
         }
 
-        var dist = distance(me.loc, enemy.loc);
+        var dist = distance(this.loc, enemy.loc);
         if (dist < shortest) {
             shortest = dist;
-            me.focus = enemy;
+            this.focus = enemy;
         }
     }
-    if (me.focus != undefined &&
+    if (this.focus != undefined &&
         shortest <= this.arm) {
-        return ACTS.ATTACK(me.focus);
-    } else if (me.focus != undefined) {
-        return ACTS.MOVE_TO(me.focus.loc);
+        return ACTS.ATTACK(this.focus);
+    } else if (this.focus != undefined) {
+        return ACTS.MOVE_TO(this.focus.loc);
     }
     return ACTS.WAIT();
 }
 
-function footSoldierOnAttack(me, enemy) {
-    console.log(me.name + ' got attacked by ' + enemy.name);
-    var dist = distance(me.loc, enemy.loc);
-    if (me.focus == undefined) {
-        me.focus = enemy;
+function footSoldierOnAttack(enemy) {
+    console.log(this.name + ' got attacked by ' + enemy.name);
+    var dist = distance(this.loc, enemy.loc);
+    if (this.focus == undefined) {
+        this.focus = enemy;
     }
 }
 
@@ -130,12 +129,12 @@ function fight() {
             }
             var action = soldier.action(this.context);
             if (action.type == 'ATTACK') {
-                action.enemy.type.health -= soldier.type.attack;
+                action.enemy.health -= soldier.attack;
                 action.enemy.onAttack(soldier);
             }
         }
         for (var i = 0; i < this.context.length; i++) {
-            if (this.context[i].type.health <= 0) {
+            if (this.context[i].health <= 0) {
                 console.log(soldier.name + " : is dead!");
                 delete this.context[i];
                 deadCnt++;
