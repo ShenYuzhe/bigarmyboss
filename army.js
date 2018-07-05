@@ -31,7 +31,6 @@ SoldierBuilder = function() {
             this.solider.loc = loc;
             return this;
         },
-// TODO(yuzheshen): rewrite set type to move each field into soldier
         withType: function(type) {
             for (k in type) {
                 this.solider[k] = type[k];
