@@ -82,7 +82,7 @@ var trace2 = {
 }
 
 var data = [trace1, trace2];
-var graphOptions = {filename: 'decouple_math', fileopt: 'overwrite'};
+var graphOptions = {filename: 'decouple_math_demo', fileopt: 'overwrite'};
 plotly.plot(data, graphOptions, function(err, msg) {
     console.log(msg);
 });
